@@ -1,73 +1,65 @@
 package com.codecool.dynamicArrayDojo;
 
-import java.lang.reflect.Array;
-
 public class DynamicIntArray {
 
-    private static Integer[] staticArray;
+    Integer[] array;
+    int pointer;
+    int size;
 
-    public DynamicIntArray(Integer size) {
-        this.staticArray = new Integer[size];
+    public DynamicIntArray(int size) {
+        this.pointer = 0;
+        this.size = size;
+        this.array = new Integer[size];
     }
 
     public DynamicIntArray() {
-        this.staticArray = new Integer[0];
+        this.pointer = 0;
+        this.size = 1;
+        this.array = new Integer[size];
     }
 
-    public void add(int number) {
-        Integer[] oldArray = staticArray;
-        Integer[] newArray = new Integer[oldArray.length + 1];
+    public void add(int value) {
+        Integer[] newArray = new Integer[++size];
 
-        Array.set(newArray, newArray.length - 1, number);
-        System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);
+        if (array[0] == null) {
+            newArray[pointer++] = value;
+            array = newArray;
+        }
 
-        staticArray = newArray;
+        else {
+            for (int i = 0; i < size - 1; i++) {
+                newArray[i] = array[i];
+                pointer++;
+            }
+
+            newArray[size - 1] = value;
+            pointer++;
+
+            array = newArray;
+        }
     }
+
+    public void remove(int index) {
+//        for (int i = 0; i < size - 1; i++) {
+//            if (i == index)
+
+//        }
+    }
+
+    public void insert(int index, int value) {}
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        for (Object o : this.staticArray)
-            sb.append(" " + o);
+        for (Integer i : array)
+            if (i != null)
+                sb.append(" " + i);
 
         return sb.toString();
     }
 
-    public void remove(int index) {
-        Integer[] oldArray = staticArray;
-        Integer[] newArray = new Integer[oldArray.length - 1];
-
-        if (index < 0 || index >= oldArray.length)
-            throw new ArrayIndexOutOfBoundsException("Invalid index.");
-
-        else if (index == 0) {
-            System.arraycopy(oldArray, 1, newArray, 0, oldArray.length - 1);
-            staticArray = newArray;
-        }
-
-        else if (index == oldArray.length - 1) {
-            System.arraycopy(oldArray, 0, newArray, 0, oldArray.length - 1);
-            staticArray = newArray;
-        }
-
-        else {
-            System.arraycopy(oldArray, 0, newArray, 0, index);
-            System.arraycopy(oldArray, index + 1, newArray, index, index);
-            staticArray = newArray;
-        }
-    }
-
-    public void insert(int index, int number) {
-        Integer[] oldArray = staticArray;
-        Integer[] newArray = new Integer[oldArray.length + 1];
-
-        if (index >= newArray.length)
-            index = newArray.length - 1;
-
-        System.arraycopy(oldArray, 0, newArray, 0, index);
-        Array.set(newArray, index, number);
-        System.arraycopy(oldArray, index, newArray, index + 1, oldArray.length - index);
-
-        staticArray = newArray;
+    public static void main(String[] args) {
+        DynamicIntArray a = new DynamicIntArray();
+        System.out.println(a.toString());
     }
 }
